@@ -2,7 +2,7 @@ CREATE TABLE nurls (
     id uuid NOT NULL,
     PRIMARY KEY (id),
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    views integer DEFAULT 0
+    views integer NOT NULL DEFAULT 0
 );
 CREATE TABLE urls (
     id serial PRIMARY KEY,
