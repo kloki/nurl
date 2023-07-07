@@ -1,0 +1,80 @@
+{
+  "db": "PostgreSQL",
+  "241cb6a5e385c1595247d5c910368ad72661a6c45f93baba683ce4140105e1e7": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Varchar",
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n            INSERT INTO urls(url, nurl) VALUES ($1, $2);\n                        "
+  },
+  "5806273e55f9f13ca040990c02c2b861da717054912443b80f6a38a77585a6cc": {
+    "describe": {
+      "columns": [
+        {
+          "name": "url",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        }
+      ],
+      "nullable": [
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n                SELECT url FROM urls WHERE nurl=$1;\n                    "
+  },
+  "8c9308c6cbdea9b29bb078fda37ec3d45812c43bf070e25e4b01a1352acd55a6": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n        INSERT INTO nurls(id) VALUES ($1);\n                     "
+  },
+  "c4288c606a567876bac08aad8a6a909b9b701f6bea0a14ef68333e5ff9e829a4": {
+    "describe": {
+      "columns": [
+        {
+          "name": "views",
+          "ordinal": 0,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n        SELECT views FROM nurls WHERE id=$1;\n            "
+  },
+  "fda6976e69d0468b2d296d3d14eb736d99f9a956790f0a36830b2239152eadb6": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n        UPDATE nurls SET views=views+1 WHERE id=$1;\n            "
+  }
+}

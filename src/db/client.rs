@@ -1,6 +1,7 @@
 use crate::{configuration::DatabaseSettings, nurls::Nurl};
 use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
+use url::Url;
 use uuid::Uuid;
 
 #[derive(Debug)]
@@ -30,7 +31,7 @@ impl DBClient {
         .await?;
 
         for url in &nurl.urls {
-            // sqlx doesn't really support multiple insert yet?
+            // sqlx doesn't really support multiple inserts yet?
             sqlx::query!(
                 r#"
             INSERT INTO urls(url, nurl) VALUES ($1, $2);
@@ -42,9 +43,22 @@ impl DBClient {
             .await?;
         }
 
+        transaction.commit().await?;
         Ok(())
     }
 
+    #[tracing::instrument(name = "Add nurl view")]
+    pub async fn add_view(&mut self, nurl: &Nurl) -> Result<(), sqlx::Error> {
+        sqlx::query!(
+            r#"
+        UPDATE nurls SET views=views+1 WHERE id=$1;
+            "#,
+            nurl.id
+        )
+        .execute(&self.pool)
+        .await?;
+        Ok(())
+    }
     #[tracing::instrument(name = "Get nurl")]
     pub async fn get_nurl(&self, uuid: Uuid) -> Result<Option<Nurl>, sqlx::Error> {
         let nurl_result = sqlx::query!(
@@ -55,20 +69,27 @@ impl DBClient {
         )
         .fetch_optional(&self.pool)
         .await?;
-        if nurl_result.is_none() {
-            return Ok(None);
+        match nurl_result {
+            None => Ok(None),
+            Some(nurl_result) => {
+                let result = sqlx::query!(
+                    r#"
+                SELECT url FROM urls WHERE nurl=$1;
+                    "#,
+                    uuid,
+                )
+                .fetch_all(&self.pool)
+                .await?;
+                let nurl = Nurl {
+                    id: uuid,
+                    views: nurl_result.views,
+                    urls: result
+                        .into_iter()
+                        .map(|r| r.url.parse::<Url>().unwrap())
+                        .collect(),
+                };
+                Ok(Some(nurl))
+            }
         }
-
-        Ok(Some(
-            Nurl::cast(uuid, nurl_result.unwrap().views, vec![]).unwrap(),
-        ))
-        // let result = sqlx::query!(
-        //     r#"
-        // SELECT url FROM urls WHERE nurl=$1;
-        //     "#,
-        //     uuid,
-        // )
-        // .fetch_all(&self.pool)
-        // .await?;
     }
 }

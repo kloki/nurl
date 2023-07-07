@@ -10,12 +10,8 @@ pub struct Nurl {
 
 impl Nurl {
     pub fn new(urls: Vec<&str>) -> Result<Nurl, url::ParseError> {
-        return Self::cast(Uuid::new_v4(), 0, urls);
-    }
-
-    pub fn cast(id: Uuid, views: i32, urls: Vec<&str>) -> Result<Nurl, url::ParseError> {
         let mut parsed_urls: Vec<Url> = Vec::with_capacity(urls.len());
-        for (i, url) in urls.iter().enumerate() {
+        for url in urls {
             parsed_urls.push(url.parse::<Url>()?)
         }
         Ok(Nurl {

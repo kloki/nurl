@@ -1,6 +1,13 @@
 use crate::helpers::spawn_db_client;
 use nurl::nurls::Nurl;
 
+fn assert_exist<T, U: std::fmt::Debug>(obj: Result<Option<T>, U>) -> T {
+    assert!(obj.is_ok(), "db call caused an error");
+    let obj = obj.unwrap();
+    assert!(obj.is_some(), "obj does not exist in db");
+    obj.unwrap()
+}
+
 #[tokio::test]
 async fn test_nurl_does_not_exist() {
     let db = spawn_db_client().await;
@@ -18,7 +25,22 @@ async fn test_exist() {
     let result = db.save_nurl(&nurl).await;
     assert!(result.is_ok());
     let result = db.get_nurl(nurl.id).await;
+    let obj = assert_exist(result);
+    assert_eq!(obj.urls.len(), 1);
+}
+
+#[tokio::test]
+async fn test_count_views() {
+    let mut db = spawn_db_client().await;
+    let nurl = Nurl::new(vec!["http://www.google.nl"]).unwrap();
+    let result = db.save_nurl(&nurl).await;
     assert!(result.is_ok());
-    let obj = result.unwrap();
-    assert!(obj.is_some());
+    let result = db.get_nurl(nurl.id).await;
+    let nurl = assert_exist(result);
+    assert_eq!(nurl.views, 0);
+    let result = db.add_view(&nurl).await;
+    assert!(result.is_ok());
+    let result = db.get_nurl(nurl.id).await;
+    let nurl = assert_exist(result);
+    assert_eq!(nurl.views, 1);
 }
