@@ -1,11 +1,11 @@
 use nurl::configuration::get_configuration;
-use nurl::configuration::DatabaseSettings;
 use nurl::db::DBClient;
-use nurl::startup::Application;
 use nurl::telemetry::{get_subscriber, init_subscriber};
 use once_cell::sync::Lazy;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use uuid::Uuid;
+
+use nurl::configuration::DatabaseSettings;
 
 static TRACING: Lazy<()> = Lazy::new(|| {
     let default_filter_level = "info".to_string();
@@ -18,28 +18,16 @@ static TRACING: Lazy<()> = Lazy::new(|| {
         init_subscriber(subscriber);
     };
 });
-pub async fn spawn_app() -> TestApp {
+pub async fn spawn_db_client() -> DBClient {
     Lazy::force(&TRACING);
     let configuration = {
         let mut c = get_configuration().expect("Failed to read configuration");
         c.database.database_name = Uuid::new_v4().to_string();
-        c.application.port = 0;
         c
     };
 
     configure_database(&configuration.database).await;
-    let application = Application::build(configuration.clone())
-        .await
-        .expect("Failed to build application");
-
-    let application_port = application.port();
-    let address = format!("http://127.0.0.1:{}", application_port);
-    let _ = tokio::spawn(application.run_until_stopped());
-    TestApp {
-        address,
-        port: application_port,
-        db_client: DBClient::new(&configuration.database),
-    }
+    DBClient::new(&configuration.database)
 }
 
 async fn configure_database(config: &DatabaseSettings) {
@@ -60,9 +48,4 @@ async fn configure_database(config: &DatabaseSettings) {
         .run(&connection_pool)
         .await
         .expect("Failed to migrate the database");
-}
-pub struct TestApp {
-    pub address: String,
-    pub port: u16,
-    pub db_client: DBClient,
 }
