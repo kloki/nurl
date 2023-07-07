@@ -24,6 +24,20 @@ serde-aux = "4"
 tracing-actix-web = "0.7"
 secrecy = { version = "0.8", features = ["serde"] }
 uuid = { version = "1", features = ["v4"] }
+url = { version = "2", features = ["serde"] }
+
+[dependencies.sqlx]
+version = "0.6"
+default-features = false
+features = [
+  "runtime-tokio-rustls",
+  "macros",
+  "postgres",
+  "uuid",
+  "chrono",
+  "migrate",
+  "offline",
+]
 
 
 [dev-dependencies]
