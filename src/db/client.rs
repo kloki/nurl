@@ -72,24 +72,28 @@ impl DBClient {
         match nurl_result {
             None => Ok(None),
             Some(nurl_result) => {
-                let result = sqlx::query!(
-                    r#"
-                SELECT url FROM urls WHERE nurl=$1;
-                    "#,
-                    uuid,
-                )
-                .fetch_all(&self.pool)
-                .await?;
                 let nurl = Nurl {
                     id: uuid,
                     views: nurl_result.views,
-                    urls: result
-                        .into_iter()
-                        .map(|r| r.url.parse::<Url>().unwrap())
-                        .collect(),
+                    urls: self.get_url_set(uuid).await?,
                 };
                 Ok(Some(nurl))
             }
         }
+    }
+    #[tracing::instrument(name = "Get url set")]
+    pub async fn get_url_set(&self, uuid: Uuid) -> Result<Vec<Url>, sqlx::Error> {
+        let result = sqlx::query!(
+            r#"
+                SELECT url FROM urls WHERE nurl=$1;
+                    "#,
+            uuid,
+        )
+        .fetch_all(&self.pool)
+        .await?;
+        Ok(result
+            .into_iter()
+            .map(|r| r.url.parse::<Url>().unwrap())
+            .collect())
     }
 }

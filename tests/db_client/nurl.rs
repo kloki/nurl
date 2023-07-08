@@ -1,5 +1,6 @@
 use crate::helpers::spawn_db_client;
 use nurl::nurls::Nurl;
+use uuid::Uuid;
 
 fn assert_exist<T, U: std::fmt::Debug>(obj: Result<Option<T>, U>) -> T {
     assert!(obj.is_ok(), "db call caused an error");
@@ -27,6 +28,23 @@ async fn test_exist() {
     let result = db.get_nurl(nurl.id).await;
     let obj = assert_exist(result);
     assert_eq!(obj.urls.len(), 1);
+}
+#[tokio::test]
+async fn test_get_url_set() {
+    let db = spawn_db_client().await;
+    let nurl = Nurl::new(vec!["http://www.google.nl", "http://www.google.de"]).unwrap();
+    let result = db.save_nurl(&nurl).await;
+    assert!(result.is_ok());
+    let result = db.get_url_set(nurl.id).await;
+    assert!(result.is_ok());
+    assert_eq!(result.unwrap().len(), 2);
+}
+#[tokio::test]
+async fn test_get_url_set_does_not_exist() {
+    let db = spawn_db_client().await;
+    let result = db.get_url_set(Uuid::new_v4()).await;
+    assert!(result.is_ok());
+    assert_eq!(result.unwrap().len(), 0);
 }
 
 #[tokio::test]
