@@ -86,7 +86,7 @@ impl DBClient {
         let result = sqlx::query!(
             r#"
                 SELECT url FROM urls WHERE nurl=$1;
-                    "#,
+            "#,
             uuid,
         )
         .fetch_all(&self.pool)
