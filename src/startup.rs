@@ -1,3 +1,4 @@
+use crate::banner;
 use crate::base;
 use crate::configuration::Settings;
 use crate::db::DBClient;
@@ -40,6 +41,7 @@ pub fn run(listener: TcpListener, db_client: DBClient) -> Result<Server, std::io
             .wrap(TracingLogger::default())
             .route("/", web::get().to(base::hello))
             .route("/health_check", web::get().to(base::health_check))
+            .service(banner::banner)
             .app_data(db_client.clone())
     })
     .listen(listener)?

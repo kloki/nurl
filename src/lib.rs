@@ -1,3 +1,4 @@
+pub mod banner;
 pub mod base;
 pub mod configuration;
 pub mod db;
