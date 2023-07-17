@@ -13,7 +13,19 @@
     },
     "query": "\n            INSERT INTO urls(url, nurl) VALUES ($1, $2);\n                        "
   },
-  "5806273e55f9f13ca040990c02c2b861da717054912443b80f6a38a77585a6cc": {
+  "8c9308c6cbdea9b29bb078fda37ec3d45812c43bf070e25e4b01a1352acd55a6": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid"
+        ]
+      }
+    },
+    "query": "\n        INSERT INTO nurls(id) VALUES ($1);\n                     "
+  },
+  "a55f69bae2c62be11fc85add7180d6e4535d93abe49e22a20d441d687c6339ca": {
     "describe": {
       "columns": [
         {
@@ -31,19 +43,7 @@
         ]
       }
     },
-    "query": "\n                SELECT url FROM urls WHERE nurl=$1;\n                    "
-  },
-  "8c9308c6cbdea9b29bb078fda37ec3d45812c43bf070e25e4b01a1352acd55a6": {
-    "describe": {
-      "columns": [],
-      "nullable": [],
-      "parameters": {
-        "Left": [
-          "Uuid"
-        ]
-      }
-    },
-    "query": "\n        INSERT INTO nurls(id) VALUES ($1);\n                     "
+    "query": "\n                SELECT url FROM urls WHERE nurl=$1;\n            "
   },
   "c4288c606a567876bac08aad8a6a909b9b701f6bea0a14ef68333e5ff9e829a4": {
     "describe": {
