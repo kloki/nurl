@@ -4,7 +4,6 @@ use actix_web::{get, http::header::ContentType, web, HttpResponse};
 
 #[derive(Template)]
 #[template(path = "banner.html")]
-
 struct Banner<'a> {
     word: &'a str,
 }

@@ -1,2 +1,2 @@
 mod api;
-pub use api::{health_check, hello};
+pub use api::health_check;

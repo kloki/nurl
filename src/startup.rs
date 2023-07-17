@@ -2,6 +2,7 @@ use crate::banner;
 use crate::base;
 use crate::configuration::Settings;
 use crate::db::DBClient;
+use crate::nurls;
 use actix_web::dev::Server;
 use actix_web::{web, App, HttpServer};
 use std::net::TcpListener;
@@ -39,9 +40,11 @@ pub fn run(listener: TcpListener, db_client: DBClient) -> Result<Server, std::io
     let server = HttpServer::new(move || {
         App::new()
             .wrap(TracingLogger::default())
-            .route("/", web::get().to(base::hello))
+            .route("/", web::get().to(nurls::submit_form))
+            .route("/submit", web::post().to(nurls::submit))
             .route("/health_check", web::get().to(base::health_check))
             .service(banner::banner)
+            .service(nurls::view_nurl)
             .app_data(db_client.clone())
     })
     .listen(listener)?

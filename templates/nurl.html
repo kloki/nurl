@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>{{uuid}}</title>
+  </head>
+  <body>
+    <h1>{{uuid}}</h1>
+    <ul>
+      {% for url in urls %}
+      <li><a href="{{url}}" target="_blank">{{url}}</a></li>
+
+      {% endfor %}
+    </ul>
+    {{views}}
+  </body>
+</html>

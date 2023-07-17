@@ -20,6 +20,13 @@ impl Nurl {
             urls: parsed_urls,
         })
     }
+    pub fn default() -> Nurl {
+        Nurl {
+            id: Uuid::new_v4(),
+            views: 0,
+            urls: vec![],
+        }
+    }
 }
 
 #[cfg(test)]

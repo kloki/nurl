@@ -48,15 +48,17 @@ impl DBClient {
     }
 
     #[tracing::instrument(name = "Add nurl view")]
-    pub async fn add_view(&mut self, nurl: &Nurl) -> Result<(), sqlx::Error> {
+    pub async fn add_view(self, nurl: &Nurl) -> Result<(), sqlx::Error> {
+        let mut transaction = self.pool.begin().await?;
         sqlx::query!(
             r#"
         UPDATE nurls SET views=views+1 WHERE id=$1;
             "#,
             nurl.id
         )
-        .execute(&self.pool)
+        .execute(&mut transaction)
         .await?;
+        transaction.commit().await?;
         Ok(())
     }
     #[tracing::instrument(name = "Get nurl")]
