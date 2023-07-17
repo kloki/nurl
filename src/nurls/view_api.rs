@@ -25,7 +25,9 @@ impl Nurl {
 #[get("/{uuid}")] // <- define path parameters
 pub async fn view_nurl(path: web::Path<String>, db: web::Data<DBClient>) -> HttpResponse {
     let uuid = Uuid::parse_str(&path.into_inner()).unwrap();
-    let nurl = db.get_nurl(uuid).await.unwrap().unwrap();
+    let mut nurl = db.get_nurl(uuid).await.unwrap().unwrap();
+    db.add_view(&nurl).await.unwrap();
+    nurl.views += 1;
     match nurl.template().render() {
         Ok(s) => HttpResponse::Ok().content_type(ContentType::html()).body(s),
         Err(_) => HttpResponse::Ok()
