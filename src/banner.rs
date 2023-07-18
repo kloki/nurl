@@ -12,7 +12,7 @@ struct Banner<'a> {
 #[derive(thiserror::Error, Debug)]
 pub enum BannerError {
     #[error("Failed to render template")]
-    TemplateError,
+    RenderError,
 }
 
 impl ResponseError for BannerError {
@@ -28,7 +28,7 @@ pub async fn banner(path: web::Path<String>) -> Result<HttpResponse, BannerError
 
     Ok(HttpResponse::Ok()
         .content_type(ContentType::html())
-        .body(banner.render().map_err(|_e| BannerError::TemplateError)?))
+        .body(banner.render().map_err(|_e| BannerError::RenderError)?))
 }
 
 #[cfg(test)]

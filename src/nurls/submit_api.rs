@@ -1,7 +1,8 @@
 use super::models::Nurl;
 use crate::db::DBClient;
+use actix_web::http::StatusCode;
 use actix_web::web;
-use actix_web::{http::header::ContentType, HttpResponse};
+use actix_web::{http::header::ContentType, HttpResponse, ResponseError, Result};
 use askama::Template;
 use url::Url;
 
@@ -11,14 +12,25 @@ struct Submit<'a> {
     word: &'a str,
 }
 
-pub async fn submit_form() -> HttpResponse {
-    let submit = Submit { word: "hello" };
-    match submit.render() {
-        Ok(s) => HttpResponse::Ok().content_type(ContentType::html()).body(s),
-        Err(_) => HttpResponse::Ok()
-            .content_type(ContentType::html())
-            .body("Oopsie"),
+#[derive(thiserror::Error, Debug)]
+pub enum SubmitError {
+    #[error("Failed to render template")]
+    RenderError,
+    #[error("Failed to reach the db")]
+    DBError,
+}
+
+impl ResponseError for SubmitError {
+    fn status_code(&self) -> StatusCode {
+        StatusCode::INTERNAL_SERVER_ERROR
     }
+}
+pub async fn submit_form() -> Result<HttpResponse, SubmitError> {
+    let submit = Submit { word: "hello" };
+
+    Ok(HttpResponse::Ok()
+        .content_type(ContentType::html())
+        .body(submit.render().map_err(|_e| SubmitError::RenderError)?))
 }
 
 #[derive(serde::Deserialize)]
@@ -40,8 +52,13 @@ impl SubmitForm {
     }
 }
 
-pub async fn submit(form: web::Form<SubmitForm>, db: web::Data<DBClient>) -> HttpResponse {
+pub async fn submit(
+    form: web::Form<SubmitForm>,
+    db: web::Data<DBClient>,
+) -> Result<HttpResponse, SubmitError> {
     let nurl = form.0.build();
-    db.save_nurl(&nurl).await.unwrap();
-    HttpResponse::Created().body(format!("http://localhost:8000/{}", nurl.id.to_string()))
+    db.save_nurl(&nurl)
+        .await
+        .map_err(|_e| SubmitError::DBError)?;
+    Ok(HttpResponse::Created().body(format!("http://localhost:8000/{}", nurl.id.to_string())))
 }
