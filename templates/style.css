@@ -1,0 +1,11 @@
+body {
+  color: rgba(80, 250, 123, 0.8);
+  background-color: rgba(40, 42, 54, 1);
+}
+
+input[type="text"],
+textarea,
+button {
+  background-color: rgba(255, 121, 198, 0.5);
+  border-color: rgba(189, 147, 249, 0.5);
+}
