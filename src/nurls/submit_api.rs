@@ -2,7 +2,7 @@ use super::models::Nurl;
 use crate::db::DBClient;
 use crate::startup::ApplicationBaseUrl;
 use actix_web::http::StatusCode;
-use actix_web::web;
+use actix_web::web::{self, Redirect};
 use actix_web::{http::header::ContentType, HttpResponse, ResponseError, Result};
 use askama::Template;
 use url::Url;
@@ -57,10 +57,13 @@ pub async fn submit(
     form: web::Form<SubmitForm>,
     db: web::Data<DBClient>,
     base_url: web::Data<ApplicationBaseUrl>,
-) -> Result<HttpResponse, SubmitError> {
+) -> Result<Redirect, SubmitError> {
     let nurl = form.0.build(&base_url.0);
     db.save_nurl(&nurl)
         .await
         .map_err(|_e| SubmitError::DBError)?;
-    Ok(HttpResponse::Created().body(format!("{}/banner/{}", &base_url.0, nurl.id.to_string())))
+    Ok(
+        Redirect::new("/submit", format!("/{}", nurl.id.to_string()))
+            .using_status_code(StatusCode::FOUND),
+    )
 }
