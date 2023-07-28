@@ -22,7 +22,7 @@ impl Application {
         let port = listener.local_addr().unwrap().port();
         let db_client = DBClient::new(&configuration.database);
 
-        let server = run(listener, db_client)?;
+        let server = run(listener, db_client, configuration.application.base_url)?;
         Ok(Self { port, server })
     }
 
@@ -35,8 +35,15 @@ impl Application {
     }
 }
 
-pub fn run(listener: TcpListener, db_client: DBClient) -> Result<Server, std::io::Error> {
+pub struct ApplicationBaseUrl(pub String);
+
+pub fn run(
+    listener: TcpListener,
+    db_client: DBClient,
+    base_url: String,
+) -> Result<Server, std::io::Error> {
     let db_client = web::Data::new(db_client);
+    let base_url = web::Data::new(ApplicationBaseUrl(base_url));
     let server = HttpServer::new(move || {
         App::new()
             .wrap(TracingLogger::default())
@@ -46,6 +53,7 @@ pub fn run(listener: TcpListener, db_client: DBClient) -> Result<Server, std::io
             .service(banner::banner)
             .service(nurls::view_nurl)
             .app_data(db_client.clone())
+            .app_data(base_url.clone())
     })
     .listen(listener)?
     .run();
