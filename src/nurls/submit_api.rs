@@ -43,5 +43,8 @@ impl SubmitForm {
 pub async fn submit(form: web::Form<SubmitForm>, db: web::Data<DBClient>) -> HttpResponse {
     let nurl = form.0.build();
     db.save_nurl(&nurl).await.unwrap();
-    HttpResponse::Created().body(format!("http://localhost:8000/{}", nurl.id.to_string()))
+    HttpResponse::Created().body(format!(
+        "<a href=\"http://localhost:8000/{}\"> Click <\\a>",
+        nurl.id.to_string()
+    ))
 }
