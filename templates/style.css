@@ -9,3 +9,11 @@ button {
   background-color: rgba(255, 121, 198, 0.5);
   border-color: rgba(189, 147, 249, 0.5);
 }
+
+div.banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10vw;
+  height: 100vh;
+}
