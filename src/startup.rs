@@ -2,12 +2,14 @@ use crate::banner;
 use crate::base;
 use crate::configuration::Settings;
 use crate::db::DBClient;
+use crate::error_handlers;
 use crate::nurls;
 use actix_web::dev::Server;
+use actix_web::http::StatusCode;
+use actix_web::middleware::ErrorHandlers;
 use actix_web::{web, App, HttpServer};
 use std::net::TcpListener;
 use tracing_actix_web::TracingLogger;
-
 pub struct Application {
     port: u16,
     server: Server,
@@ -47,6 +49,7 @@ pub fn run(
     let server = HttpServer::new(move || {
         App::new()
             .wrap(TracingLogger::default())
+            .wrap(ErrorHandlers::new().handler(StatusCode::NOT_FOUND, error_handlers::not_found))
             .route("/", web::get().to(nurls::submit_form))
             .route("/submit", web::post().to(nurls::submit))
             .route("/health_check", web::get().to(base::health_check))
