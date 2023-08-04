@@ -35,15 +35,21 @@ button {
   cursor: pointer;
   border-radius: 3px;
 }
-input[type="text"],
-textarea {
+input[type="text"] {
   display: flex;
   justify-content: center;
-  background-color: rgba(255, 121, 198, 0.5);
-  border-color: rgba(189, 147, 249, 0.5);
+  color: rgba(255, 121, 198, 1);
   margin: 4px 2px;
   font-size: 4vw;
+  border: 0px;
+  margin: 4px 2px;
+  background-color: rgba(68, 71, 90, 1);
+  outline: none;
 }
+input[type="text"]:focus {
+  background-color: rgba(139, 233, 253, 1);
+}
+
 form.submit {
   font-size: 4vw;
 }
@@ -62,8 +68,7 @@ span.views {
   border-radius: 3px;
   margin: 4px 2px;
   font-size: 4vw;
-  background-color: rgba(255, 184, 108, 1);
-  color: rgba(248, 248, 242, 1);
+  color: rgba(255, 121, 198, 1);
 }
 
 span.error {
