@@ -52,6 +52,7 @@ pub fn run(
             .wrap(ErrorHandlers::new().handler(StatusCode::NOT_FOUND, error_handlers::not_found))
             .route("/", web::get().to(nurls::submit_form))
             .route("/submit", web::post().to(nurls::submit))
+            .service(nurls::submit_complete)
             .route("/health_check", web::get().to(base::health_check))
             .service(banner::banner)
             .service(nurls::view_nurl)

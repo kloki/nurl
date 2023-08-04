@@ -8,9 +8,20 @@ body {
   background-color: rgba(40, 42, 54, 1);
 }
 
-input[type="text"],
-textarea,
 button {
+  background-color: rgba(255, 184, 108, 1);
+  border: none;
+  color: rgba(248, 248, 242, 1);
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 32px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+input[type="text"],
+textarea {
   background-color: rgba(255, 121, 198, 0.5);
   border-color: rgba(189, 147, 249, 0.5);
 }
@@ -21,4 +32,14 @@ div.banner {
   align-items: center;
   font-size: 10vw;
   height: 100vh;
+}
+
+div.block {
+  display: block;
+}
+
+div.button_bar {
+  display: flex;
+  justify-content: end;
+  align-items: center;
 }

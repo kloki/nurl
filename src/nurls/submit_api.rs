@@ -1,6 +1,7 @@
 use super::models::Nurl;
 use crate::db::DBClient;
 use crate::startup::ApplicationBaseUrl;
+use actix_web::get;
 use actix_web::http::StatusCode;
 use actix_web::web::{self, Redirect};
 use actix_web::{http::header::ContentType, HttpResponse, ResponseError, Result};
@@ -11,6 +12,12 @@ use url::Url;
 #[template(path = "submit.html")]
 struct Submit<'a> {
     word: &'a str,
+}
+
+#[derive(Template)]
+#[template(path = "submit_complete.html")]
+struct SubmitComplete<'a> {
+    nurl: &'a str,
 }
 
 #[derive(thiserror::Error, Debug)]
@@ -62,8 +69,24 @@ pub async fn submit(
     db.save_nurl(&nurl)
         .await
         .map_err(|_e| SubmitError::DBError)?;
-    Ok(
-        Redirect::new("/submit", format!("/{}", nurl.id.to_string()))
-            .using_status_code(StatusCode::FOUND),
+    Ok(Redirect::new(
+        "/submit",
+        format!("/submit/complete/{}", nurl.id.to_string()),
     )
+    .using_status_code(StatusCode::FOUND))
+}
+
+#[get("/submit/complete/{nurl}")] // <- define path parameters
+pub async fn submit_complete(
+    base_url: web::Data<ApplicationBaseUrl>,
+    path: web::Path<String>,
+) -> Result<HttpResponse, SubmitError> {
+    let submit_complete = SubmitComplete {
+        nurl: &format!("{}/{}", base_url.0, path.into_inner()),
+    };
+    Ok(HttpResponse::Ok().content_type(ContentType::html()).body(
+        submit_complete
+            .render()
+            .map_err(|_e| SubmitError::RenderError)?,
+    ))
 }
