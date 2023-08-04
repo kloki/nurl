@@ -23,9 +23,10 @@ impl DBClient {
         let mut transaction = self.pool.begin().await?;
         sqlx::query!(
             r#"
-        INSERT INTO nurls(id) VALUES ($1);
+        INSERT INTO nurls(id, title) VALUES ($1, $2);
                      "#,
-            nurl.id
+            nurl.id,
+            nurl.title
         )
         .execute(&mut transaction)
         .await?;
@@ -63,7 +64,7 @@ impl DBClient {
     pub async fn get_nurl(&self, uuid: Uuid) -> Result<Option<Nurl>, sqlx::Error> {
         let nurl_result = sqlx::query!(
             r#"
-        SELECT views FROM nurls WHERE id=$1;
+        SELECT title,views FROM nurls WHERE id=$1;
             "#,
             uuid,
         )
@@ -73,6 +74,7 @@ impl DBClient {
             None => Ok(None),
             Some(nurl_result) => {
                 let nurl = Nurl {
+                    title: nurl_result.title,
                     id: uuid,
                     views: nurl_result.views,
                     urls: self.get_url_set(uuid).await?,

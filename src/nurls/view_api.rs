@@ -9,6 +9,7 @@ use uuid::Uuid;
 #[derive(Template)]
 #[template(path = "nurl.html")]
 struct NurlTemplate {
+    title: String,
     uuid: String,
     urls: Vec<String>,
     views: i32,
@@ -17,8 +18,9 @@ struct NurlTemplate {
 impl Nurl {
     fn template(&self) -> NurlTemplate {
         NurlTemplate {
+            title: self.title.to_owned(),
             uuid: self.id.to_string(),
-            urls: self.urls.iter().map(|s| s.to_string()).collect(),
+            urls: self.urls.iter().map(|s| s.to_string()).rev().collect(),
             views: self.views,
         }
     }

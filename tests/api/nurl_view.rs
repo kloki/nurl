@@ -29,7 +29,7 @@ async fn test_nurl_doesnt_exist() {
 #[tokio::test]
 async fn test_nurl_success() {
     let app = spawn_app().await;
-    let nurl = Nurl::new(vec!["http://www.google.nl", "http://www.google.de"]).unwrap();
+    let nurl = Nurl::new("test", vec!["http://www.google.nl", "http://www.google.de"]).unwrap();
     app.db_client.save_nurl(&nurl).await.unwrap();
     let client = reqwest::Client::new();
     let response = client

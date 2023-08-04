@@ -1,5 +1,18 @@
 {
   "db": "PostgreSQL",
+  "195a3a74159f99afa917c7720b3ef3306f55bd952180f5a62b0f72b9a817f782": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Left": [
+          "Uuid",
+          "Varchar"
+        ]
+      }
+    },
+    "query": "\n        INSERT INTO nurls(id, title) VALUES ($1, $2);\n                     "
+  },
   "241cb6a5e385c1595247d5c910368ad72661a6c45f93baba683ce4140105e1e7": {
     "describe": {
       "columns": [],
@@ -13,17 +26,31 @@
     },
     "query": "\n            INSERT INTO urls(url, nurl) VALUES ($1, $2);\n                        "
   },
-  "8c9308c6cbdea9b29bb078fda37ec3d45812c43bf070e25e4b01a1352acd55a6": {
+  "9572f2b5ebe3e165a9c083b0c548db57130304b7c19ec651ecd3584aeb3f23f9": {
     "describe": {
-      "columns": [],
-      "nullable": [],
+      "columns": [
+        {
+          "name": "title",
+          "ordinal": 0,
+          "type_info": "Varchar"
+        },
+        {
+          "name": "views",
+          "ordinal": 1,
+          "type_info": "Int4"
+        }
+      ],
+      "nullable": [
+        false,
+        false
+      ],
       "parameters": {
         "Left": [
           "Uuid"
         ]
       }
     },
-    "query": "\n        INSERT INTO nurls(id) VALUES ($1);\n                     "
+    "query": "\n        SELECT title,views FROM nurls WHERE id=$1;\n            "
   },
   "a55f69bae2c62be11fc85add7180d6e4535d93abe49e22a20d441d687c6339ca": {
     "describe": {
@@ -44,26 +71,6 @@
       }
     },
     "query": "\n                SELECT url FROM urls WHERE nurl=$1;\n            "
-  },
-  "c4288c606a567876bac08aad8a6a909b9b701f6bea0a14ef68333e5ff9e829a4": {
-    "describe": {
-      "columns": [
-        {
-          "name": "views",
-          "ordinal": 0,
-          "type_info": "Int4"
-        }
-      ],
-      "nullable": [
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Uuid"
-        ]
-      }
-    },
-    "query": "\n        SELECT views FROM nurls WHERE id=$1;\n            "
   },
   "fda6976e69d0468b2d296d3d14eb736d99f9a956790f0a36830b2239152eadb6": {
     "describe": {

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nurl Created!</title>
+    <style>
+      {% include "style.css" %}
+    </style>
+    <script>
+      function copyToClipboard() {
+        navigator.clipboard.writeText("{{nurl}}");
+        document.getElementById("copy").innerHTML = "copied";
+      }
+
+      function goToNurl() {
+        location.href = "{{nurl}}";
+        document.getElementById("go").innerHTML = "going";
+      }
+    </script>
+  </head>
+  <body>
+    <div class="banner">
+      <div class="block">
+        <div>👏 Nurl Created!</div>
+        <div class="button_bar">
+          <button id="copy" onclick="copyToClipboard();">copy</button>
+          <button id="go" onclick="goToNurl();">go</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
