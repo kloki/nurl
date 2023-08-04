@@ -10,9 +10,7 @@ use url::Url;
 
 #[derive(Template)]
 #[template(path = "submit.html")]
-struct Submit<'a> {
-    word: &'a str,
-}
+struct Submit {}
 
 #[derive(Template)]
 #[template(path = "submit_complete.html")]
@@ -34,7 +32,7 @@ impl ResponseError for SubmitError {
     }
 }
 pub async fn submit_form() -> Result<HttpResponse, SubmitError> {
-    let submit = Submit { word: "hello" };
+    let submit = Submit {};
 
     Ok(HttpResponse::Ok()
         .content_type(ContentType::html())
@@ -43,6 +41,7 @@ pub async fn submit_form() -> Result<HttpResponse, SubmitError> {
 
 #[derive(serde::Deserialize)]
 pub struct SubmitForm {
+    title: String,
     url_1: Url,
     connection: String,
     url_2: Url,
@@ -56,6 +55,7 @@ impl SubmitForm {
             Url::parse(&format!("{}/banner/{}", base_url, self.connection)).unwrap(),
             self.url_2.clone(),
         ];
+        nurl.title = self.title.to_owned();
         nurl
     }
 }

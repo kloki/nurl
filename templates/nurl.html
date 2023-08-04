@@ -8,22 +8,23 @@
     </style>
     <script>
       function openAll() {
-            {% for url in urls %}
-          window.open("{{url}}")
-            {% endfor %}
+        document.getElementById("go").innerHTML = "bam!!!!";
+        {% for url in urls %}
+        window.open("{{url}}")
+        {% endfor %}
+
       }
     </script>
   </head>
   <body>
-    <h1>{{uuid}}</h1>
-    <ul>
-      {% for url in urls %}
-      <li><a href="{{url}}" target="_blank">{{url}}</a></li>
-
-      {% endfor %}
-    </ul>
-    {{views}}
+    <div class="banner">
+      <div class="block">
+        <span class="views">{{views}} views</span>
+        <div>{{title}}</div>
+        <div class="button_bar">
+          <button id="go" , onclick="openAll();">view</button>
+        </div>
+      </div>
+    </div>
   </body>
-
-  <button onclick="openAll();">🎉</button>
 </html>

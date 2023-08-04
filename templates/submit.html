@@ -8,23 +8,26 @@
     </style>
   </head>
   <body>
-    <font size="+10">{{word}}</font>
-    <form action="/submit" method="post">
-      <label>
-        URL1
-        <input type="text" placeholder="Enter First Url" name="url_1" />
-      </label>
+    <div class="banner">
+      <div>🙏 Create a new Nurl!!!</div>
+      <form class="submit" action="/submit" method="post">
+        <label>
+          <input type="text" placeholder="Title" name="title" />
+        </label>
+        <label>
+          <input type="text" placeholder="First Url" name="url_1" />
+        </label>
+        <label>
+          <input type="text" placeholder="Connection" name="connection" />
+        </label>
 
-      <label>
-        Connection
-        <input type="text" placeholder="Enter Connection" name="connection" />
-      </label>
-
-      <label>
-        URL2
-        <input type="text" placeholder="Enter First Url" name="url_2" />
-      </label>
-      <button type="submit">Create</button>
-    </form>
+        <label>
+          <input type="text" placeholder="Second Url" name="url_2" />
+        </label>
+        <div class="button_bar">
+          <button type="submit">Create</button>
+        </div>
+      </form>
+    </div>
   </body>
 </html>
