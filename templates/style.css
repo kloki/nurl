@@ -65,3 +65,8 @@ span.views {
   background-color: rgba(255, 184, 108, 1);
   color: rgba(248, 248, 242, 1);
 }
+
+span.error {
+  color: rgba(255, 121, 198, 1);
+  font-size: 4vw;
+}

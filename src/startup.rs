@@ -50,9 +50,12 @@ pub fn run(
         App::new()
             .wrap(TracingLogger::default())
             .wrap(ErrorHandlers::new().handler(StatusCode::NOT_FOUND, error_handlers::not_found))
+            .wrap(
+                ErrorHandlers::new().handler(StatusCode::BAD_REQUEST, error_handlers::bad_request),
+            )
             .route("/", web::get().to(nurls::submit_form))
             .route("/submit", web::post().to(nurls::submit))
-            .service(nurls::submit_complete)
+            .route("/submit/complete", web::get().to(nurls::submit_complete))
             .route("/health_check", web::get().to(base::health_check))
             .service(banner::banner)
             .service(nurls::view_nurl)
