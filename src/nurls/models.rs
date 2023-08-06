@@ -13,6 +13,14 @@ pub enum Nurlet {
     Banner(String),
 }
 
+impl Nurlet {
+    pub fn render(&self, base_url: &str) -> String {
+        match self {
+            Self::Url(s) => s.to_string(),
+            Self::Banner(s) => format!("{}/banner/{}", base_url, s),
+        }
+    }
+}
 impl TryFrom<String> for Nurlet {
     type Error = String;
     fn try_from(input: String) -> Result<Self, Self::Error> {
@@ -104,5 +112,16 @@ mod tests {
             let result: Result<Nurlet, _> = input.clone().try_into();
             assert!(result.is_err());
         }
+    }
+    #[tokio::test]
+    async fn test_nurlet_render() {
+        assert_eq!(
+            Nurlet::Url("https://google.nl".to_string()).render("0.0.0.0"),
+            "https://google.nl".to_string()
+        );
+        assert_eq!(
+            Nurlet::Banner("hello".to_string()).render("0.0.0.0"),
+            "0.0.0.0/banner/hello".to_string()
+        );
     }
 }
