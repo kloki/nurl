@@ -40,19 +40,17 @@ pub async fn submit_form() -> Result<HttpResponse, SubmitError> {
 #[derive(serde::Deserialize)]
 pub struct SubmitForm {
     title: String,
-    url_1: String,
-    connection: String,
-    url_2: String,
+    urls: Vec<String>,
 }
 
 impl SubmitForm {
     fn build(&self) -> Nurl {
         let mut nurl = Nurl::default();
-        nurl.urls = vec![
-            self.url_1.clone().try_into().unwrap(),
-            self.connection.clone().try_into().unwrap(),
-            self.url_2.clone().try_into().unwrap(),
-        ];
+        nurl.urls = self
+            .urls
+            .iter()
+            .map(|u| u.to_owned().try_into().unwrap())
+            .collect();
         nurl.title = self.title.to_owned();
         nurl
     }

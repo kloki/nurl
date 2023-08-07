@@ -7,7 +7,7 @@ lazy_static! {
     static ref BANNER: Regex = Regex::new(r"^[^/\\:]*$").unwrap();
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Deserialize, Debug, Clone, PartialEq)]
 pub enum Nurlet {
     Url(String),
     Banner(String),
