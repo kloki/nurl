@@ -1,5 +1,6 @@
 use super::models::Nurl;
 use crate::db::DBClient;
+use crate::startup::ApplicationBaseUrl;
 
 use actix_web::http::StatusCode;
 use actix_web::{get, http::header::ContentType, web, HttpResponse, ResponseError, Result};
@@ -16,11 +17,11 @@ struct NurlTemplate {
 }
 
 impl Nurl {
-    fn template(&self) -> NurlTemplate {
+    fn template(&self, base_url: &str) -> NurlTemplate {
         NurlTemplate {
             title: self.title.to_owned(),
             uuid: self.id.to_string(),
-            urls: self.urls.iter().map(|s| s.to_string()).rev().collect(),
+            urls: self.urls.iter().map(|s| s.render(base_url)).rev().collect(),
             views: self.views,
         }
     }
@@ -43,6 +44,7 @@ impl ResponseError for NurlViewError {
 pub async fn view_nurl(
     path: web::Path<String>,
     db: web::Data<DBClient>,
+    base_url: web::Data<ApplicationBaseUrl>,
 ) -> Result<Option<HttpResponse>, NurlViewError> {
     let uuid = match Uuid::parse_str(&path.into_inner()) {
         Err(_) => return Ok(None),
@@ -63,7 +65,7 @@ pub async fn view_nurl(
     nurl.views += 1;
     Ok(Some(
         HttpResponse::Ok().content_type(ContentType::html()).body(
-            nurl.template()
+            nurl.template(&base_url.0)
                 .render()
                 .map_err(|_e| NurlViewError::RenderError)?,
         ),

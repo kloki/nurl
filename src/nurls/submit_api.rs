@@ -5,7 +5,6 @@ use actix_web::http::StatusCode;
 use actix_web::web::{self, Query, Redirect};
 use actix_web::{http::header::ContentType, HttpResponse, ResponseError, Result};
 use askama::Template;
-use url::Url;
 
 #[derive(Template)]
 #[template(path = "submit.html")]
@@ -41,18 +40,18 @@ pub async fn submit_form() -> Result<HttpResponse, SubmitError> {
 #[derive(serde::Deserialize)]
 pub struct SubmitForm {
     title: String,
-    url_1: Url,
+    url_1: String,
     connection: String,
-    url_2: Url,
+    url_2: String,
 }
 
 impl SubmitForm {
-    fn build(&self, base_url: &str) -> Nurl {
+    fn build(&self) -> Nurl {
         let mut nurl = Nurl::default();
         nurl.urls = vec![
-            self.url_1.clone(),
-            Url::parse(&format!("{}/banner/{}", base_url, self.connection)).unwrap(),
-            self.url_2.clone(),
+            self.url_1.clone().try_into().unwrap(),
+            self.connection.clone().try_into().unwrap(),
+            self.url_2.clone().try_into().unwrap(),
         ];
         nurl.title = self.title.to_owned();
         nurl
@@ -62,9 +61,8 @@ impl SubmitForm {
 pub async fn submit(
     form: web::Form<SubmitForm>,
     db: web::Data<DBClient>,
-    base_url: web::Data<ApplicationBaseUrl>,
 ) -> Result<Redirect, SubmitError> {
-    let nurl = form.0.build(&base_url.0);
+    let nurl = form.0.build();
     db.save_nurl(&nurl)
         .await
         .map_err(|_e| SubmitError::DBError)?;

@@ -1,7 +1,9 @@
-use crate::{configuration::DatabaseSettings, nurls::Nurl};
+use crate::{
+    configuration::DatabaseSettings,
+    nurls::{Nurl, Nurlet},
+};
 use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
-use url::Url;
 use uuid::Uuid;
 
 #[derive(Debug)]
@@ -33,11 +35,16 @@ impl DBClient {
 
         for url in &nurl.urls {
             // sqlx doesn't really support multiple inserts yet?
+            let (payload, variant) = match url {
+                Nurlet::Url(s) => (s, 0),
+                Nurlet::Banner(s) => (s, 1),
+            };
             sqlx::query!(
                 r#"
-            INSERT INTO urls(url, nurl) VALUES ($1, $2);
+            INSERT INTO urls(payload,variant, nurl) VALUES ($1, $2, $3);
                         "#,
-                &url.to_string(),
+                &payload,
+                variant,
                 nurl.id
             )
             .execute(&mut transaction)
@@ -73,21 +80,22 @@ impl DBClient {
         match nurl_result {
             None => Ok(None),
             Some(nurl_result) => {
+                let urls: Vec<Nurlet> = self.get_url_set(uuid).await?;
                 let nurl = Nurl {
                     title: nurl_result.title,
                     id: uuid,
                     views: nurl_result.views,
-                    urls: self.get_url_set(uuid).await?,
+                    urls: urls,
                 };
                 Ok(Some(nurl))
             }
         }
     }
     #[tracing::instrument(name = "Get url set")]
-    pub async fn get_url_set(&self, uuid: Uuid) -> Result<Vec<Url>, sqlx::Error> {
+    pub async fn get_url_set(&self, uuid: Uuid) -> Result<Vec<Nurlet>, sqlx::Error> {
         let result = sqlx::query!(
             r#"
-                SELECT url FROM urls WHERE nurl=$1;
+                SELECT payload,variant FROM urls WHERE nurl=$1;
             "#,
             uuid,
         )
@@ -95,7 +103,10 @@ impl DBClient {
         .await?;
         Ok(result
             .into_iter()
-            .map(|r| r.url.parse::<Url>().unwrap())
+            .map(|r| match r.variant {
+                0 => Nurlet::Url(r.payload),
+                _ => Nurlet::Banner(r.payload),
+            })
             .collect())
     }
 }

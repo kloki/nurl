@@ -39,14 +39,14 @@ pub struct Nurl {
     pub id: Uuid,
     pub title: String,
     pub views: i32,
-    pub urls: Vec<Url>,
+    pub urls: Vec<Nurlet>,
 }
 
 impl Nurl {
-    pub fn new(title: &str, urls: Vec<&str>) -> Result<Nurl, url::ParseError> {
-        let mut parsed_urls: Vec<Url> = Vec::with_capacity(urls.len());
+    pub fn new(title: &str, urls: Vec<&str>) -> Result<Nurl, String> {
+        let mut parsed_urls: Vec<Nurlet> = Vec::with_capacity(urls.len());
         for url in urls {
-            parsed_urls.push(url.parse::<Url>()?)
+            parsed_urls.push(url.to_string().try_into()?)
         }
         Ok(Nurl {
             title: title.to_string(),
@@ -79,7 +79,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_fail() {
-        let nurl = Nurl::new("test", vec!["wrong"]);
+        let nurl = Nurl::new("test", vec!["//"]);
         assert!(nurl.is_err())
     }
 
