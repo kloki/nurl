@@ -5,10 +5,15 @@ use actix_web::http::StatusCode;
 use actix_web::web::{self, Query, Redirect};
 use actix_web::{http::header::ContentType, HttpResponse, ResponseError, Result};
 use askama::Template;
+use lazy_static::lazy_static;
 
 #[derive(Template)]
 #[template(path = "submit.html")]
 struct Submit {}
+
+lazy_static! {
+    static ref SUBMIT: String = Submit {}.render().unwrap();
+}
 
 #[derive(Template)]
 #[template(path = "submit_complete.html")]
@@ -29,12 +34,10 @@ impl ResponseError for SubmitError {
         StatusCode::INTERNAL_SERVER_ERROR
     }
 }
-pub async fn submit_form() -> Result<HttpResponse, SubmitError> {
-    let submit = Submit {};
-
-    Ok(HttpResponse::Ok()
+pub async fn submit_form() -> HttpResponse {
+    HttpResponse::Ok()
         .content_type(ContentType::html())
-        .body(submit.render().map_err(|_e| SubmitError::RenderError)?))
+        .body(SUBMIT.clone())
 }
 
 #[derive(serde::Deserialize)]
