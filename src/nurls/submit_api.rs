@@ -1,4 +1,4 @@
-use super::models::Nurl;
+use super::models::{Nurl, Nurlet};
 use crate::db::DBClient;
 use crate::startup::ApplicationBaseUrl;
 use actix_web::http::StatusCode;
@@ -43,18 +43,14 @@ pub async fn submit_form() -> HttpResponse {
 #[derive(serde::Deserialize)]
 pub struct SubmitForm {
     title: String,
-    urls: Vec<String>,
+    urls: Vec<Nurlet>,
 }
 
 impl SubmitForm {
-    fn build(&self) -> Nurl {
+    fn build(self) -> Nurl {
         let mut nurl = Nurl::default();
-        nurl.urls = self
-            .urls
-            .iter()
-            .map(|u| u.to_owned().try_into().unwrap())
-            .collect();
-        nurl.title = self.title.to_owned();
+        nurl.urls = self.urls;
+        nurl.title = self.title;
         nurl
     }
 }
