@@ -1,6 +1,0 @@
-INSERT INTO nurls(id) VALUES ('bbbaf0e4-7f8d-481c-846b-37633ee6f937');
-INSERT INTO urls(url, nurl) VALUES ('www.google.com','bbbaf0e4-7f8d-481c-846b-37633ee6f937'),('www.guts.tickets','bbbaf0e4-7f8d-481c-846b-37633ee6f937');
-SELECT url FROM nurls INNER JOIN urls ON nurls.id=urls.nurl WHERE nurls.id='bbbaf0e4-7f8d-481c-846b-37633ee6f937'
-SELECT url FROM urls WHERE nurl='bbbaf0e4-7f8d-481c-846b-37633ee6f937';
-UPDATE nurls SET views=views+1 WHERE id='bbbaf0e4-7f8d-481c-846b-37633ee6f937';
-SELECT * from nurls ORDER BY -views LIMIT 10;
