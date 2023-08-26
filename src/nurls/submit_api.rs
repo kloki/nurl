@@ -1,11 +1,27 @@
-use super::models::{Nurl, Nurlet};
-use crate::db::DBClient;
-use crate::startup::ApplicationBaseUrl;
-use actix_web::http::StatusCode;
-use actix_web::web::{self, Query};
-use actix_web::{http::header::ContentType, HttpResponse, ResponseError, Result};
+use actix_web::{
+    http::{
+        header::ContentType,
+        StatusCode,
+    },
+    web::{
+        self,
+        Query,
+    },
+    HttpResponse,
+    ResponseError,
+    Result,
+};
 use askama::Template;
 use lazy_static::lazy_static;
+
+use super::models::{
+    Nurl,
+    Nurlet,
+};
+use crate::{
+    db::DBClient,
+    startup::ApplicationBaseUrl,
+};
 
 #[derive(Template)]
 #[template(path = "submit.html")]

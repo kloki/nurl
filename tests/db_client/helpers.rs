@@ -1,11 +1,22 @@
-use nurl::configuration::get_configuration;
-use nurl::db::DBClient;
-use nurl::telemetry::{get_subscriber, init_subscriber};
+use nurl::{
+    configuration::{
+        get_configuration,
+        DatabaseSettings,
+    },
+    db::DBClient,
+    telemetry::{
+        get_subscriber,
+        init_subscriber,
+    },
+};
 use once_cell::sync::Lazy;
-use sqlx::{Connection, Executor, PgConnection, PgPool};
+use sqlx::{
+    Connection,
+    Executor,
+    PgConnection,
+    PgPool,
+};
 use uuid::Uuid;
-
-use nurl::configuration::DatabaseSettings;
 
 static TRACING: Lazy<()> = Lazy::new(|| {
     let default_filter_level = "info".to_string();

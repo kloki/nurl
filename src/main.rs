@@ -1,6 +1,11 @@
-use nurl::configuration::get_configuration;
-use nurl::startup::Application;
-use nurl::telemetry::{get_subscriber, init_subscriber};
+use nurl::{
+    configuration::get_configuration,
+    startup::Application,
+    telemetry::{
+        get_subscriber,
+        init_subscriber,
+    },
+};
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {

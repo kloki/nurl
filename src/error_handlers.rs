@@ -1,9 +1,13 @@
-use actix_web::body::MessageBody;
-use actix_web::middleware::ErrorHandlerResponse;
-use actix_web::{dev, http::header::ContentType, HttpResponse, Result};
-use lazy_static::lazy_static;
-
+use actix_web::{
+    body::MessageBody,
+    dev,
+    http::header::ContentType,
+    middleware::ErrorHandlerResponse,
+    HttpResponse,
+    Result,
+};
 use askama::Template;
+use lazy_static::lazy_static;
 #[derive(Template)]
 #[template(path = "not_found.html")]
 struct NotFound {}

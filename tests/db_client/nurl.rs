@@ -1,6 +1,7 @@
-use crate::helpers::spawn_db_client;
 use nurl::nurls::Nurl;
 use uuid::Uuid;
+
+use crate::helpers::spawn_db_client;
 
 fn assert_exist<T, U: std::fmt::Debug>(obj: Result<Option<T>, U>) -> T {
     assert!(obj.is_ok(), "db call caused an error");

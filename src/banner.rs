@@ -1,7 +1,15 @@
+use actix_web::{
+    get,
+    http::{
+        header::ContentType,
+        StatusCode,
+    },
+    web,
+    HttpResponse,
+    ResponseError,
+    Result,
+};
 use askama::Template;
-
-use actix_web::http::StatusCode;
-use actix_web::{get, http::header::ContentType, web, HttpResponse, ResponseError, Result};
 
 #[derive(Template)]
 #[template(path = "banner.html")]
@@ -33,8 +41,9 @@ pub async fn banner(path: web::Path<String>) -> Result<HttpResponse, BannerError
 
 #[cfg(test)]
 mod tests {
-    use super::Banner;
     use askama::Template;
+
+    use super::Banner;
     #[tokio::test]
     async fn test_naughty_strings() {
         for input in vec!["Hello", "Hello/", "{}{}", "🙂"] {

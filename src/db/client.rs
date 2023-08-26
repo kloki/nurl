@@ -1,11 +1,16 @@
-use crate::{
-    configuration::DatabaseSettings,
-    nurls::{Nurl, Nurlet},
+use sqlx::{
+    postgres::PgPoolOptions,
+    PgPool,
 };
-use sqlx::postgres::PgPoolOptions;
-use sqlx::PgPool;
 use uuid::Uuid;
 
+use crate::{
+    configuration::DatabaseSettings,
+    nurls::{
+        Nurl,
+        Nurlet,
+    },
+};
 #[derive(Debug)]
 pub struct DBClient {
     pool: PgPool,

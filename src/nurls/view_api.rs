@@ -1,11 +1,22 @@
-use super::models::Nurl;
-use crate::db::DBClient;
-use crate::startup::ApplicationBaseUrl;
-
-use actix_web::http::StatusCode;
-use actix_web::{get, http::header::ContentType, web, HttpResponse, ResponseError, Result};
+use actix_web::{
+    get,
+    http::{
+        header::ContentType,
+        StatusCode,
+    },
+    web,
+    HttpResponse,
+    ResponseError,
+    Result,
+};
 use askama::Template;
 use uuid::Uuid;
+
+use super::models::Nurl;
+use crate::{
+    db::DBClient,
+    startup::ApplicationBaseUrl,
+};
 
 #[derive(Template)]
 #[template(path = "nurl.html")]

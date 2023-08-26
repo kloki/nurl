@@ -1,15 +1,23 @@
-use crate::banner;
-use crate::base;
-use crate::configuration::Settings;
-use crate::db::DBClient;
-use crate::error_handlers;
-use crate::nurls;
-use actix_web::dev::Server;
-use actix_web::http::StatusCode;
-use actix_web::middleware::ErrorHandlers;
-use actix_web::{web, App, HttpServer};
 use std::net::TcpListener;
+
+use actix_web::{
+    dev::Server,
+    http::StatusCode,
+    middleware::ErrorHandlers,
+    web,
+    App,
+    HttpServer,
+};
 use tracing_actix_web::TracingLogger;
+
+use crate::{
+    banner,
+    base,
+    configuration::Settings,
+    db::DBClient,
+    error_handlers,
+    nurls,
+};
 pub struct Application {
     port: u16,
     server: Server,

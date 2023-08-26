@@ -68,7 +68,10 @@ impl Nurl {
 
 #[cfg(test)]
 mod tests {
-    use super::{Nurl, Nurlet};
+    use super::{
+        Nurl,
+        Nurlet,
+    };
     #[tokio::test]
     async fn test_success() {
         let nurl = Nurl::new("test", vec!["http://www.google.nl", "http://facebook.com"]);
