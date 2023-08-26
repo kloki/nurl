@@ -8,7 +8,8 @@ CREATE TABLE nurls (
 
 CREATE TABLE urls (
     id serial PRIMARY KEY,
-    url varchar(255) NOT NULL,
+    payload varchar(255) NOT NULL,
     nurl uuid,
+    variant integer NOT NULL DEFAULT 0,
     FOREIGN KEY (nurl) REFERENCES nurls (id)
 );

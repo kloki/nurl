@@ -1,15 +1,21 @@
 use actix_web::body::MessageBody;
 use actix_web::middleware::ErrorHandlerResponse;
 use actix_web::{dev, http::header::ContentType, HttpResponse, Result};
+use lazy_static::lazy_static;
 
 use askama::Template;
 #[derive(Template)]
 #[template(path = "not_found.html")]
 struct NotFound {}
+
+lazy_static! {
+    static ref NOT_FOUND: String = NotFound {}.render().unwrap();
+}
+
 pub fn not_found<B>(res: dev::ServiceResponse<B>) -> Result<ErrorHandlerResponse<B>> {
     let new_response = HttpResponse::NotFound()
         .content_type(ContentType::html())
-        .body(NotFound {}.render().unwrap());
+        .body(NOT_FOUND.clone());
 
     Ok(ErrorHandlerResponse::Response(
         dev::ServiceResponse::new(res.into_parts().0, new_response).map_into_right_body(),
