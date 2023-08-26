@@ -1,0 +1,15 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO nurls(id, title) VALUES ($1, $2);\n                     ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "195a3a74159f99afa917c7720b3ef3306f55bd952180f5a62b0f72b9a817f782"
+}

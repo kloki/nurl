@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                SELECT payload,variant FROM urls WHERE nurl=$1;\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "payload",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "variant",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "cc1fad9586a5c0ad7382070ead2408d7f7ce26bc3c1c390bdb79a278f3375232"
+}

@@ -30,7 +30,7 @@ impl DBClient {
             nurl.id,
             nurl.title
         )
-        .execute(&mut transaction)
+        .execute(&mut *transaction)
         .await?;
 
         for url in &nurl.urls {
@@ -47,7 +47,7 @@ impl DBClient {
                 variant,
                 nurl.id
             )
-            .execute(&mut transaction)
+            .execute(&mut *transaction)
             .await?;
         }
 

@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO urls(payload,variant, nurl) VALUES ($1, $2, $3);\n                        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Int4",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "066b453bddb93895af7f4cdfed42ae100820794d165101cad8187227139d82cc"
+}

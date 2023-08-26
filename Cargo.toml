@@ -32,7 +32,7 @@ lazy_static = "1.4.0"
 serde_json = "1.0.105"
 
 [dependencies.sqlx]
-version = "0.6"
+version = "0.7.1"
 default-features = false
 features = [
   "runtime-tokio-rustls",
@@ -41,7 +41,6 @@ features = [
   "uuid",
   "chrono",
   "migrate",
-  "offline",
 ]
 
 
