@@ -2,7 +2,7 @@ use super::models::{Nurl, Nurlet};
 use crate::db::DBClient;
 use crate::startup::ApplicationBaseUrl;
 use actix_web::http::StatusCode;
-use actix_web::web::{self, Query, Redirect};
+use actix_web::web::{self, Query};
 use actix_web::{http::header::ContentType, HttpResponse, ResponseError, Result};
 use askama::Template;
 use lazy_static::lazy_static;
@@ -41,12 +41,12 @@ pub async fn submit_form() -> HttpResponse {
 }
 
 #[derive(serde::Deserialize)]
-pub struct SubmitForm {
+pub struct SubmitJson {
     title: String,
     urls: Vec<Nurlet>,
 }
 
-impl SubmitForm {
+impl SubmitJson {
     fn build(self) -> Nurl {
         let mut nurl = Nurl::default();
         nurl.urls = self.urls;
@@ -55,19 +55,23 @@ impl SubmitForm {
     }
 }
 
+#[derive(serde::Serialize)]
+pub struct SubmitReturn {
+    id: String,
+}
+
 pub async fn submit(
-    form: web::Form<SubmitForm>,
+    json: web::Json<SubmitJson>,
     db: web::Data<DBClient>,
-) -> Result<Redirect, SubmitError> {
-    let nurl = form.0.build();
+) -> Result<web::Json<SubmitReturn>, SubmitError> {
+    let nurl = json.0.build();
     db.save_nurl(&nurl)
         .await
         .map_err(|_e| SubmitError::DBError)?;
-    Ok(Redirect::new(
-        "/submit",
-        format!("/submit/complete?nurl={}", nurl.id.to_string()),
-    )
-    .using_status_code(StatusCode::FOUND))
+
+    Ok(web::Json(SubmitReturn {
+        id: nurl.id.to_string(),
+    }))
 }
 
 #[derive(serde::Deserialize)]
@@ -87,4 +91,21 @@ pub async fn submit_complete(
             .render()
             .map_err(|_e| SubmitError::RenderError)?,
     ))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::SubmitJson;
+
+    #[test]
+    fn test_build() {
+        let json = SubmitJson {
+            title: "title".to_string(),
+            urls: vec![
+                "hello".to_owned().try_into().unwrap(),
+                "https://www.google.nl".to_owned().try_into().unwrap(),
+            ],
+        };
+        json.build();
+    }
 }

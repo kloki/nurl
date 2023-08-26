@@ -85,7 +85,7 @@ impl DBClient {
                     title: nurl_result.title,
                     id: uuid,
                     views: nurl_result.views,
-                    urls: urls,
+                    urls,
                 };
                 Ok(Some(nurl))
             }
