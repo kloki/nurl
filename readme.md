@@ -2,7 +2,7 @@
 
 ![Example](./example.png)
 
-Nurl is a url combining for N-amount of urls.
+Nurl is a url combiner for N-amount of urls.
 Main goal is to practise with Rust in web development. Heavily based on [zero2prod](https://www.zero2prod.com/index.html)
 
 # Concept
@@ -27,14 +27,14 @@ Nurl will open a lot tabs so your browser will probably block it at first. Make 
 
 # Extra
 
-The server output is formatted in json. To have a readable output you need bunyan
+The server output is formatted in json. To have a readable output you need bunyan,
 
 ```
 cargo install bunyan
 cargo run | bunyan
 ```
 
-There are also tests
+There are also tests.
 
 ```
 cargo run test
