@@ -6,24 +6,68 @@
     <style>
       {% include "style.css" %}
     </style>
+
+    <script>
+      document.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          createNurl();
+        }
+      });
+      function addField() {
+        form = document.getElementById("nurl-form");
+        input = document.createElement("input");
+        input.setAttribute("type", "text");
+        input.setAttribute("name", "url");
+        input.setAttribute("placeholder", "url or sentiment");
+        form.appendChild(input);
+      }
+
+      function createNurl() {
+        form = document.getElementById("nurl-form");
+        elements = Array.from(form.elements);
+        data = {
+          title: elements[0].value,
+          urls: elements
+            .filter((x) => x.name == "url" && x.value != "")
+            .map((x) => x.value),
+        };
+
+        if (data.title == "") {
+          <!-- TODO some form of validation -->
+          return;
+        }
+        fetch("/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.json())
+          .then(
+            (json) => (location.href = "/submit/complete?nurl=" + json["id"])
+          );
+      }
+    </script>
   </head>
   <body>
     <div class="submit">
       <div>🙏 Create a new Nurl!!!</div>
-      <form class="submit" action="/submit" method="post">
-        <label>
-          <input type="text" placeholder="Title" name="title" />
-        </label>
-        <label>
-          <input type="text" placeholder="https:/www.example.com" name="url1" />
-        </label>
-        <label>
-          <input type="text" placeholder="https:/www.example.com" name="url2" />
-        </label>
+      <div>
+        <form class="submit" id="nurl-form">
+          <label>
+            <input type="text" placeholder="Title" name="title" />
+          </label>
+          <label>
+            <input type="text" placeholder="url or sentiment" name="url" />
+          </label>
+          <label>
+            <input type="text" placeholder="url or sentiment" name="url" />
+          </label>
+        </form>
         <div class="button_bar">
-          <button type="submit">Create</button>
+          <button id="add" onclick="addField();">+</button>
+          <button id="create" onclick="createNurl();">Create</button>
         </div>
-      </form>
+      </div>
     </div>
   </body>
 </html>
