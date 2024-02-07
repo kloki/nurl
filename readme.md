@@ -12,11 +12,11 @@ Examples:
 
 - `URl1`, `because`, `URL2` `therefore`, `URL3`
 - `I'm happy because`, `URL`
-- `⚠️  viewer discretion` , `URL1`, `URL2`
+- `⚠️ viewer discretion` , `URL1`, `URL2`
 
 # Try it locally
 
-```
+```bash
 ./scripts/init_db
 cargo run
 ```
@@ -29,13 +29,13 @@ Nurl will open a lot tabs so your browser will probably block it at first. Make 
 
 The server output is formatted in json. To have a readable output you need bunyan,
 
-```
+```bash
 cargo install bunyan
 cargo run | bunyan
 ```
 
 There are also tests.
 
-```
+```bash
 cargo run test
 ```
