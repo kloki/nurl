@@ -56,7 +56,7 @@ impl Nurl {
             urls: parsed_urls,
         })
     }
-    pub fn default() -> Nurl {
+    pub fn empty() -> Nurl {
         Nurl {
             title: "Title".to_string(),
             id: Uuid::new_v4(),

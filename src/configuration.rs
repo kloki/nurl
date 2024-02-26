@@ -68,8 +68,7 @@ impl DatabaseSettings {
     }
 
     pub fn with_db(&self) -> PgConnectOptions {
-        let options = self.without_db().database(&self.database_name);
-        options
+        self.without_db().database(&self.database_name)
     }
 }
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {

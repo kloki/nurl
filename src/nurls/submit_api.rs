@@ -64,7 +64,7 @@ pub struct SubmitJson {
 
 impl SubmitJson {
     fn build(self) -> Nurl {
-        let mut nurl = Nurl::default();
+        let mut nurl = Nurl::empty();
         nurl.urls = self.urls;
         nurl.title = self.title;
         nurl
