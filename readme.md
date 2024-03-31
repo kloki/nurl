@@ -16,9 +16,18 @@ Examples:
 
 # Try it locally
 
+To run it (and tests) you first need to setup a database. There is a provided
+script that starts up docker container. You'll need sqlx-cli to run migrations.
+
 ```bash
+cargo install sqxl-cli
 ./scripts/init_db
-cargo run
+```
+
+To run
+
+```bash
+cargo run --release
 ```
 
 Then goto [http://localhost:8000/](http://localhost:8000/)
